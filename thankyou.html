@@ -1,1 +1,77 @@
+<!DOCTYPE html>
+<!--
+Name: David Kinard
+File: thankyou.html
+Date created: June 17, 2026
+Date updated: June 27, 2026
+Version: 4.0
+Purpose: Confirmation page displayed after patient registration form submission
+         for Valor Veterans Medical Center. Updated for Homework 3.
+-->
 
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Valor Veterans Medical Center</title>
+
+    <!-- Link to external CSS file (same as homework3.html) -->
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Favicon for browser tab -->
+    <link rel="icon" type="image/png" href="favicon.png">
+</head>
+
+<body>
+
+    <!-- ==================== HEADER / BANNER ==================== -->
+    <div id="banner">
+        <div id="logo-area">
+            <img src="logo.png" alt="Valor Veterans Medical Center logo" id="logo">
+        </div>
+
+        <div id="title-area">
+            <h1>Valor Veterans Medical Center</h1>
+        </div>
+
+        <div id="date-area">
+            <!-- Dynamic date injected via inline JavaScript at bottom of page -->
+            <p>Today is: <span id="today"></span></p>
+        </div>
+    </div>
+    <!-- ==================== END HEADER ==================== -->
+
+
+    <!-- ==================== CONFIRMATION MESSAGE ==================== -->
+    <div id="form-container">
+        <h2>Registration Complete</h2>
+        <p>Thank you for your submission. We will be contacting you shortly.</p>
+        <p><a href="homework3.html">Return to Registration Form</a></p>
+    </div>
+    <!-- ==================== END CONFIRMATION MESSAGE ==================== -->
+
+
+    <!-- ==================== FOOTER ==================== -->
+    <div id="footer">
+        <p>Valor Veterans Medical Center | Sugar Land, TX</p>
+        <!-- Contact button links to VA website -->
+        <a href="https://www.va.gov" target="_blank" class="contact-button">Contact Us</a>
+    </div>
+    <!-- ==================== END FOOTER ==================== -->
+
+
+    <!-- ==================== INLINE JAVASCRIPT ==================== -->
+    <script>
+        /* Dynamically display today's full date in the banner */
+        document.getElementById("today").innerHTML = new Date().toLocaleDateString("en-US", {
+            weekday: "long",
+            year: "numeric",
+            month: "long",
+            day: "numeric"
+        });
+    </script>
+    <!-- ==================== END JAVASCRIPT ==================== -->
+
+</body>
+</html>
+<!-- ==================== END OF DOCUMENT: thankyou.html ==================== -->
