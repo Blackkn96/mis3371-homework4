@@ -1,1 +1,486 @@
+/*
+Name: David Kinard
+File: style.css
+Date created: June 17, 2026
+Date updated: July 11, 2026
+Version: 4.0
+Purpose: External stylesheet for Valor Veterans Medical Center Homework 4.
+         Adds fixed header and fixed footer (content protection so they do not
+         scroll off the viewport), iFrame container styling, cookie welcome
+         message, returning user bar, and Remember Me styling.
+*/
 
+
+/* ==================== GLOBAL / BODY ==================== */
+
+body {
+    font-family: Arial, sans-serif;
+    font-size: 15px;
+    color: #1a1a2e;
+    background-image: url('background.jpg');
+    background-size: cover;
+    background-attachment: fixed;
+    background-position: center;
+    margin: 0;
+
+    /* Padding top/bottom so content is not hidden behind fixed header/footer */
+    padding-top: 130px;
+    padding-bottom: 110px;
+}
+
+
+/* ==================== FIXED HEADER (CONTENT PROTECTION) ==================== */
+/* position: fixed keeps the banner locked to the top of the viewport
+   so it never scrolls off the screen */
+
+#banner {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #1b3a6b;
+    padding: 12px 30px;
+    border-bottom: 4px solid #f0c040;
+    box-sizing: border-box;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+#logo {
+    height: 70px;
+    width: auto;
+}
+
+#title-area h1 {
+    font-family: Georgia, serif;
+    font-size: 26px;
+    color: #f0c040;
+    margin: 0;
+    text-align: center;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+#date-area p {
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    color: #ffffff;
+    margin: 0;
+    text-align: right;
+}
+
+
+/* ==================== COOKIE WELCOME MESSAGE ==================== */
+/* Injected into the banner by JavaScript based on the cookie */
+
+#welcome-message {
+    font-family: Arial, sans-serif;
+    font-size: 15px;
+    font-weight: bold;
+    color: #ffffff;
+    text-align: center;
+    margin-top: 4px;
+}
+
+
+/* ==================== RETURNING USER BAR ==================== */
+/* Shown only when a cookie is found. Sits just under the fixed header. */
+
+#returning-user-bar {
+    background-color: #fff8dc;
+    border: 2px solid #f0c040;
+    border-radius: 6px;
+    max-width: 900px;
+    margin: 15px auto 0 auto;
+    padding: 10px 16px;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+    color: #1b3a6b;
+    text-align: center;
+}
+
+#returning-user-bar label {
+    cursor: pointer;
+}
+
+#not-me-text {
+    color: #c62828;
+}
+
+
+/* ==================== FORM CONTAINER ==================== */
+
+#form-container {
+    background-color: rgba(255, 255, 255, 0.94);
+    margin: 20px auto;
+    padding: 25px 40px;
+    max-width: 900px;
+    border-radius: 8px;
+    border-top: 5px solid #1b3a6b;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+
+/* ==================== HEADINGS ==================== */
+
+h2 {
+    font-family: Georgia, serif;
+    font-size: 24px;
+    color: #1b3a6b;
+    border-bottom: 2px solid #f0c040;
+    padding-bottom: 8px;
+    margin-bottom: 20px;
+}
+
+h3 {
+    font-family: Georgia, serif;
+    font-size: 17px;
+    color: #808080;
+    border-left: 4px solid #f0c040;
+    padding-left: 10px;
+    margin-top: 25px;
+    margin-bottom: 10px;
+}
+
+
+/* ==================== TABLE / FORM LAYOUT ==================== */
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 10px;
+}
+
+td {
+    padding: 8px 10px;
+    vertical-align: middle;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    color: #1a1a2e;
+}
+
+label {
+    font-weight: bold;
+    color: #1b3a6b;
+}
+
+
+/* ==================== FORM INPUTS ==================== */
+
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="tel"],
+select,
+textarea {
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    color: #1a1a2e;
+    background-color: #f4f8ff;
+    border: 1px solid #1b3a6b;
+    border-radius: 4px;
+    padding: 5px 8px;
+    box-sizing: border-box;
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="email"]:focus,
+input[type="tel"]:focus,
+select:focus,
+textarea:focus {
+    outline: none;
+    border-color: #f0c040;
+    background-color: #fffef0;
+}
+
+input[type="range"] {
+    accent-color: #1b3a6b;
+    width: 200px;
+    vertical-align: middle;
+}
+
+input[type="radio"],
+input[type="checkbox"] {
+    accent-color: #1b3a6b;
+    margin-right: 4px;
+}
+
+#health_rating_value {
+    font-weight: bold;
+    color: #1b3a6b;
+    margin-left: 10px;
+}
+
+
+/* ==================== INPUT BOX SIZES BY NAME ==================== */
+
+input[name="firstname"] { width: 160px; }
+input[name="middleinit"] { width: 35px; text-align: center; }
+input[name="lastname"] { width: 160px; }
+input[name="dob"] { width: 110px; }
+input[name="ssn"] { width: 120px; }
+input[name="city"] { width: 150px; }
+input[name="zip"] { width: 90px; }
+input[name="phone1"] { width: 130px; }
+input[name="email"] { width: 250px; }
+input[name="userid"] { width: 180px; }
+input[name="password"],
+input[name="confirm_password"] { width: 180px; }
+input[name="insurance_company"] { width: 220px; }
+input[name="policy_number"] { width: 150px; }
+input[name="address1"],
+input[name="address2"] { width: 100%; }
+
+
+/* ==================== NAME SELECTORS ==================== */
+
+input[name="symptoms"] { background-color: #f0f7ff; }
+
+input[name="userid"] {
+    border-color: #f0c040;
+    background-color: #fffef0;
+}
+
+
+/* ==================== ERROR MESSAGES ==================== */
+/* Pre-defined space so the form does not jump around */
+
+.error-msg {
+    display: inline-block;
+    min-height: 16px;
+    margin-left: 10px;
+    font-family: Arial, sans-serif;
+    font-size: 12px;
+    font-weight: bold;
+    color: #c62828;
+}
+
+
+/* ==================== ERROR / SUCCESS SUMMARY ==================== */
+
+#error-summary {
+    margin-top: 20px;
+    padding: 12px 16px;
+    border-radius: 6px;
+    background-color: #fff8f8;
+    border: 2px solid currentColor;
+    font-family: Arial, sans-serif;
+    font-size: 15px;
+    font-weight: bold;
+    text-align: center;
+}
+
+
+/* ==================== REMEMBER ME ==================== */
+
+#remember-me {
+    transform: scale(1.3);
+    margin-right: 8px;
+}
+
+#remember-note {
+    font-family: Arial, sans-serif;
+    font-size: 12px;
+    font-style: italic;
+    color: #555555;
+}
+
+
+/* ==================== IFRAME ==================== */
+
+#iframe-container {
+    border: 2px solid #1b3a6b;
+    border-radius: 6px;
+    overflow: hidden;
+    background-color: #f4f8ff;
+    margin-bottom: 10px;
+}
+
+#resources-frame {
+    border: none;
+    display: block;
+}
+
+
+/* ==================== BUTTONS ==================== */
+
+.button-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 25px;
+    padding-top: 15px;
+    border-top: 1px solid #cccccc;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+input[type="reset"] {
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    background-color: #ffffff;
+    color: #1b3a6b;
+    border: 2px solid #1b3a6b;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+input[type="reset"]:hover {
+    background-color: #1b3a6b;
+    color: #ffffff;
+}
+
+/* Review and Validate buttons */
+button[type="button"] {
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    background-color: #f0c040;
+    color: #1b3a6b;
+    border: 2px solid #f0c040;
+    padding: 10px 25px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+button[type="button"]:hover {
+    background-color: #d4a800;
+    border-color: #d4a800;
+    color: #ffffff;
+}
+
+input[type="submit"] {
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    background-color: #1b6b2f;
+    color: #ffffff;
+    border: 2px solid #1b6b2f;
+    padding: 10px 30px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+input[type="submit"]:hover {
+    background-color: #f0c040;
+    color: #1b3a6b;
+    border-color: #f0c040;
+}
+
+
+/* ==================== REVIEW SECTION ==================== */
+
+#review-section {
+    margin-top: 30px;
+    padding: 20px;
+    background-color: #eef4ff;
+    border: 2px solid #1b3a6b;
+    border-radius: 8px;
+}
+
+#review-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+}
+
+#review-table th {
+    background-color: #1b3a6b;
+    color: #f0c040;
+    font-family: Georgia, serif;
+    font-size: 16px;
+    padding: 12px;
+    text-align: center;
+}
+
+#review-table td {
+    padding: 8px 12px;
+    border-bottom: 1px solid #cccccc;
+    color: #1a1a2e;
+}
+
+#review-table td:first-child {
+    font-weight: bold;
+    color: #1b3a6b;
+    width: 35%;
+}
+
+#review-table tr:hover {
+    background-color: #dce8ff;
+}
+
+
+/* ==================== HYPERLINKS ==================== */
+
+a {
+    color: #1b3a6b;
+    font-family: Arial, sans-serif;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+a:hover {
+    color: #f0c040;
+    text-decoration: underline;
+}
+
+a:visited { color: #4a6fa5; }
+
+
+/* ==================== FIXED FOOTER (CONTENT PROTECTION) ==================== */
+/* position: fixed keeps the footer locked to the bottom of the viewport
+   so it never scrolls off the screen */
+
+#footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+
+    background-color: #1b3a6b;
+    color: #ffffff;
+    text-align: center;
+    padding: 12px 30px;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    border-top: 4px solid #f0c040;
+    box-sizing: border-box;
+    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.3);
+}
+
+#footer p {
+    margin: 0 0 8px 0;
+    color: #ffffff;
+}
+
+.contact-button {
+    display: inline-block;
+    background-color: #f0c040;
+    color: #1b3a6b;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 7px 20px;
+    border-radius: 4px;
+    text-decoration: none;
+    letter-spacing: 1px;
+}
+
+.contact-button:hover {
+    background-color: #ffffff;
+    color: #1b3a6b;
+}
+
+.contact-button:visited { color: #1b3a6b; }
+
+/* ==================== END OF DOCUMENT: style.css ==================== */
