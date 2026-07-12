@@ -1,1 +1,513 @@
+<!DOCTYPE html>
+<!--
+Name: David Kinard
+File: homework4.html
+Date created: June 17, 2026
+Date updated: July 8, 2026
+Version: 4.0
+Purpose: MIS 3371 Homework 4 - Patient registration form for Valor Veterans
+         Medical Center. Adds Fetch API (external state list), iFrame (veteran
+         resources), fixed header/footer content protection, cookie tracking
+         (remember user by first name), and local storage (saves non-secure
+         form data). Builds on Homework 3 JavaScript validation.
+-->
 
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Valor Veterans Medical Center</title>
+
+    <!-- Link to external CSS file -->
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Favicon for browser tab -->
+    <link rel="icon" type="image/png" href="favicon.png">
+
+    <!-- Link to external JavaScript file -->
+    <script src="script.js" defer></script>
+</head>
+
+<body>
+
+    <!-- ==================== FIXED HEADER / BANNER ==================== -->
+    <!-- Content protection: this header stays fixed at top when scrolling -->
+    <div id="banner">
+        <div id="logo-area">
+            <img src="logo.png" alt="Valor Veterans Medical Center logo" id="logo">
+        </div>
+
+        <div id="title-area">
+            <h1>Valor Veterans Medical Center</h1>
+            <!-- Cookie-based welcome message injected here by JavaScript -->
+            <div id="welcome-message"></div>
+        </div>
+
+        <div id="date-area">
+            <p>Today is: <span id="today"></span></p>
+        </div>
+    </div>
+    <!-- ==================== END FIXED HEADER ==================== -->
+
+
+    <!-- ==================== RETURNING USER BAR ==================== -->
+    <!-- Hidden by default. Shown only if a cookie is found. -->
+    <div id="returning-user-bar" style="display:none;">
+        <label for="not-me">
+            <input type="checkbox" id="not-me" onclick="startAsNewUser()">
+            <span id="not-me-text">Not you? Click HERE to start as a NEW USER.</span>
+        </label>
+    </div>
+    <!-- ==================== END RETURNING USER BAR ==================== -->
+
+
+    <!-- ==================== MAIN FORM CONTAINER ==================== -->
+    <div id="form-container">
+        <h2>Patient Registration Form</h2>
+
+        <form action="thankyou.html" id="registrationForm">
+
+            <!-- ---------- Personal Information ---------- -->
+            <h3>Personal Information</h3>
+            <table>
+                <!-- First Name (used for the tracking cookie) -->
+                <tr>
+                    <td><label for="firstname">First Name:</label></td>
+                    <td>
+                        <input type="text" id="firstname" name="firstname"
+                            maxlength="30" required
+                            title="Enter your first name (1-30 characters, letters, apostrophes and dashes only)"
+                            onblur="validateFirstName(); saveToLocalStorage()"
+                            oninput="validateFirstName()">
+                        <span class="error-msg" id="firstname-error"></span>
+                    </td>
+                </tr>
+                <!-- Middle Initial -->
+                <tr>
+                    <td><label for="middleinit">Middle Initial:</label></td>
+                    <td>
+                        <input type="text" id="middleinit" name="middleinit"
+                            maxlength="1"
+                            title="Enter your middle initial (1 letter only, optional)"
+                            onblur="validateMiddleInit(); saveToLocalStorage()"
+                            oninput="validateMiddleInit()">
+                        <span class="error-msg" id="middleinit-error"></span>
+                    </td>
+                </tr>
+                <!-- Last Name -->
+                <tr>
+                    <td><label for="lastname">Last Name:</label></td>
+                    <td>
+                        <input type="text" id="lastname" name="lastname"
+                            maxlength="30" required
+                            title="Enter your last name (1-30 characters, letters, apostrophes and dashes only)"
+                            onblur="validateLastName(); saveToLocalStorage()"
+                            oninput="validateLastName()">
+                        <span class="error-msg" id="lastname-error"></span>
+                    </td>
+                </tr>
+                <!-- Date of Birth -->
+                <tr>
+                    <td><label for="dob">Date of Birth:</label></td>
+                    <td>
+                        <input type="text" id="dob" name="dob"
+                            placeholder="MM/DD/YYYY" maxlength="10" required
+                            title="Enter your date of birth (MM/DD/YYYY). Cannot be in the future or more than 120 years ago."
+                            onblur="validateDOB(); saveToLocalStorage()"
+                            oninput="validateDOB()">
+                        <span class="error-msg" id="dob-error"></span>
+                    </td>
+                </tr>
+                <!-- SSN - SECURE, never saved to local storage -->
+                <tr>
+                    <td><label for="ssn">SSN:</label></td>
+                    <td>
+                        <input type="password" id="ssn" name="ssn"
+                            placeholder="XXX-XX-XXXX" maxlength="11" required
+                            title="Enter your 9-digit Social Security Number. Dashes are added automatically. This is never saved."
+                            oninput="formatSSN(); validateSSN()" onblur="validateSSN()">
+                        <span class="error-msg" id="ssn-error"></span>
+                    </td>
+                </tr>
+                <!-- Gender -->
+                <tr>
+                    <td>Gender:</td>
+                    <td>
+                        <input type="radio" id="male" name="gender" value="Male" required
+                            title="Select your gender"
+                            onchange="validateGender(); saveToLocalStorage()">
+                        <label for="male">Male</label>
+                        <input type="radio" id="female" name="gender" value="Female"
+                            title="Select your gender"
+                            onchange="validateGender(); saveToLocalStorage()">
+                        <label for="female">Female</label>
+                        <input type="radio" id="other" name="gender" value="Other"
+                            title="Select your gender"
+                            onchange="validateGender(); saveToLocalStorage()">
+                        <label for="other">Other</label>
+                        <span class="error-msg" id="gender-error"></span>
+                    </td>
+                </tr>
+            </table>
+
+            <!-- ---------- Contact Information ---------- -->
+            <h3>Contact Information</h3>
+            <table>
+                <tr>
+                    <td><label for="address1">Address Line 1:</label></td>
+                    <td colspan="5">
+                        <input type="text" id="address1" name="address1"
+                            maxlength="30" required
+                            title="Enter your street address (2-30 characters required)"
+                            onblur="validateAddress1(); saveToLocalStorage()"
+                            oninput="validateAddress1()">
+                        <span class="error-msg" id="address1-error"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="address2">Address Line 2:</label></td>
+                    <td colspan="5">
+                        <input type="text" id="address2" name="address2"
+                            maxlength="30"
+                            title="Enter apartment, suite, or unit number (optional, 2-30 characters if entered)"
+                            onblur="validateAddress2(); saveToLocalStorage()"
+                            oninput="validateAddress2()">
+                        <span class="error-msg" id="address2-error"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="city">City:</label></td>
+                    <td>
+                        <input type="text" id="city" name="city"
+                            maxlength="30" required
+                            title="Enter your city (2-30 characters required)"
+                            onblur="validateCity(); saveToLocalStorage()"
+                            oninput="validateCity()">
+                        <span class="error-msg" id="city-error"></span>
+                    </td>
+
+                    <td><label for="state">State:</label></td>
+                    <td>
+                        <!--
+                            State dropdown is EMPTY here on purpose.
+                            The option list is loaded from the external file
+                            states.html using the Fetch API in script.js
+                        -->
+                        <select id="state" name="state" required
+                            title="Select your state"
+                            onchange="validateState(); saveToLocalStorage()">
+                        </select>
+                        <span class="error-msg" id="state-error"></span>
+                    </td>
+
+                    <td><label for="zip">Zip Code:</label></td>
+                    <td>
+                        <input type="text" id="zip" name="zip"
+                            placeholder="12345" maxlength="10" required
+                            title="Enter your 5-digit zip code (ZIP+4 allowed: 12345-6789)"
+                            onblur="validateZip(); saveToLocalStorage()"
+                            oninput="validateZip()">
+                        <span class="error-msg" id="zip-error"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="phone1">Phone:</label></td>
+                    <td>
+                        <input type="tel" id="phone1" name="phone1"
+                            placeholder="123-456-7890" maxlength="12" required
+                            title="Enter your phone number in 123-456-7890 format"
+                            onblur="validatePhone(); saveToLocalStorage()"
+                            oninput="validatePhone()">
+                        <span class="error-msg" id="phone1-error"></span>
+                    </td>
+
+                    <td><label for="email">Email:</label></td>
+                    <td colspan="3">
+                        <input type="email" id="email" name="email"
+                            placeholder="name@domain.com" maxlength="50" required
+                            title="Enter a valid email in name@domain.tld format (will be converted to lowercase)"
+                            onblur="validateEmail(); saveToLocalStorage()"
+                            oninput="validateEmail()">
+                        <span class="error-msg" id="email-error"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="preferred_contact">Preferred Contact Method:</label></td>
+                    <td>
+                        <select id="preferred_contact" name="preferred_contact"
+                            title="Select how you would like us to contact you"
+                            onchange="saveToLocalStorage()">
+                            <option value="phone">Phone</option>
+                            <option value="email" selected>Email</option>
+                            <option value="text">Text</option>
+                        </select>
+                    </td>
+                </tr>
+            </table>
+
+            <!-- ---------- Account Information ---------- -->
+            <h3>Account Information</h3>
+            <table>
+                <!-- User ID -->
+                <tr>
+                    <td><label for="userid">Desired User ID:</label></td>
+                    <td>
+                        <input type="text" id="userid" name="userid"
+                            minlength="5" maxlength="20" required
+                            title="5-20 characters. Must start with a letter. Letters, numbers, dashes and underscores only. No spaces."
+                            oninput="validateUserID()"
+                            onblur="validateUserID(); saveToLocalStorage()">
+                        <span class="error-msg" id="userid-error"></span>
+                    </td>
+                </tr>
+                <!-- Password - SECURE, never saved to local storage -->
+                <tr>
+                    <td><label for="password">Password:</label></td>
+                    <td>
+                        <input type="password" id="password" name="password"
+                            minlength="8" maxlength="30" required
+                            title="8-30 characters. Must contain 1 uppercase, 1 lowercase, 1 number, and 1 special character. This is never saved."
+                            oninput="validatePassword()" onblur="validatePassword()">
+                        <span class="error-msg" id="password-error"></span>
+                    </td>
+                </tr>
+                <!-- Confirm Password - SECURE, never saved -->
+                <tr>
+                    <td><label for="confirm_password">Confirm Password:</label></td>
+                    <td>
+                        <input type="password" id="confirm_password" name="confirm_password"
+                            minlength="8" maxlength="30" required
+                            title="Re-enter your password exactly. Both passwords must match."
+                            oninput="validateConfirmPassword()" onblur="validateConfirmPassword()">
+                        <span class="error-msg" id="confirm_password-error"></span>
+                    </td>
+                </tr>
+            </table>
+
+            <!-- ---------- Veteran / Insurance Information ---------- -->
+            <h3>Veteran / Insurance Information</h3>
+            <table>
+                <tr>
+                    <td><label for="branch_service">Branch of Service:</label></td>
+                    <td>
+                        <select id="branch_service" name="branch_service"
+                            title="Select the branch of military you served in"
+                            onchange="saveToLocalStorage()">
+                            <option value="">Select</option>
+                            <option value="Army">Army</option>
+                            <option value="Navy">Navy</option>
+                            <option value="Air Force">Air Force</option>
+                            <option value="Marines">Marines</option>
+                            <option value="Coast Guard">Coast Guard</option>
+                            <option value="Space Force">Space Force</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Eligible for Veteran Health Benefits?</td>
+                    <td>
+                        <input type="radio" id="va_yes" name="va_eligible" value="Yes"
+                            title="Select Yes if eligible for VA health benefits"
+                            onchange="saveToLocalStorage()">
+                        <label for="va_yes">Yes</label>
+                        <input type="radio" id="va_no" name="va_eligible" value="No"
+                            title="Select No if not eligible for VA health benefits"
+                            onchange="saveToLocalStorage()">
+                        <label for="va_no">No</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Service-Connected Disability?</td>
+                    <td>
+                        <input type="radio" id="service_yes" name="service_connected" value="Yes"
+                            title="Select Yes if you have a service-connected disability"
+                            onchange="saveToLocalStorage()">
+                        <label for="service_yes">Yes</label>
+                        <input type="radio" id="service_no" name="service_connected" value="No"
+                            title="Select No if you do not have a service-connected disability"
+                            onchange="saveToLocalStorage()">
+                        <label for="service_no">No</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Do you have insurance?</td>
+                    <td>
+                        <input type="radio" id="insurance_yes" name="insurance" value="Yes" required
+                            title="Select Yes if you have insurance"
+                            onchange="validateInsurance(); saveToLocalStorage()">
+                        <label for="insurance_yes">Yes</label>
+                        <input type="radio" id="insurance_no" name="insurance" value="No"
+                            title="Select No if you do not have insurance"
+                            onchange="validateInsurance(); saveToLocalStorage()">
+                        <label for="insurance_no">No</label>
+                        <span class="error-msg" id="insurance-error"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="insurance_company">Insurance Company:</label></td>
+                    <td>
+                        <input type="text" id="insurance_company" name="insurance_company"
+                            maxlength="50"
+                            title="Enter your insurance company name (optional)"
+                            onblur="saveToLocalStorage()">
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="policy_number">Policy Number:</label></td>
+                    <td>
+                        <input type="text" id="policy_number" name="policy_number"
+                            maxlength="30"
+                            title="Enter your insurance policy number (optional)"
+                            onblur="saveToLocalStorage()">
+                    </td>
+                </tr>
+            </table>
+
+            <!-- ---------- Medical Information ---------- -->
+            <h3>Medical Information</h3>
+            <table>
+                <tr>
+                    <td><label for="symptoms">Current Symptoms:</label></td>
+                    <td>
+                        <textarea id="symptoms" name="symptoms" rows="3" cols="50" required
+                            title="Describe your current symptoms (required, no double quotes)"
+                            onblur="validateSymptoms(); saveToLocalStorage()"
+                            oninput="validateSymptoms()"></textarea>
+                        <span class="error-msg" id="symptoms-error"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Have you been vaccinated?</td>
+                    <td>
+                        <input type="radio" id="vaccinated_yes" name="vaccinated" value="Yes" required
+                            title="Select Yes if vaccinated"
+                            onchange="validateVaccinated(); saveToLocalStorage()">
+                        <label for="vaccinated_yes">Yes</label>
+                        <input type="radio" id="vaccinated_no" name="vaccinated" value="No"
+                            title="Select No if not vaccinated"
+                            onchange="validateVaccinated(); saveToLocalStorage()">
+                        <label for="vaccinated_no">No</label>
+                        <span class="error-msg" id="vaccinated-error"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Medical History:</td>
+                    <td>
+                        <input type="checkbox" id="chicken_pox" name="medical_history" value="Chicken Pox"
+                            title="Check if you have had Chicken Pox" onchange="saveToLocalStorage()">
+                        <label for="chicken_pox">Chicken Pox</label>
+
+                        <input type="checkbox" id="measles" name="medical_history" value="Measles"
+                            title="Check if you have had Measles" onchange="saveToLocalStorage()">
+                        <label for="measles">Measles</label>
+
+                        <input type="checkbox" id="covid19" name="medical_history" value="Covid-19"
+                            title="Check if you have had Covid-19" onchange="saveToLocalStorage()">
+                        <label for="covid19">Covid-19</label>
+
+                        <input type="checkbox" id="small_pox" name="medical_history" value="Small Pox"
+                            title="Check if you have had Small Pox" onchange="saveToLocalStorage()">
+                        <label for="small_pox">Small Pox</label>
+
+                        <input type="checkbox" id="tetanus" name="medical_history" value="Tetanus"
+                            title="Check if you have had Tetanus" onchange="saveToLocalStorage()">
+                        <label for="tetanus">Tetanus</label>
+                    </td>
+                </tr>
+                <!-- Slide bar with dynamic value -->
+                <tr>
+                    <td><label for="health_rating">Health Rating:</label></td>
+                    <td>
+                        1
+                        <input type="range" id="health_rating" name="health_rating"
+                            min="1" max="10" value="5" step="1"
+                            title="Slide to rate your health from 1 (poor) to 10 (excellent)"
+                            oninput="updateHealthRating(this.value)"
+                            onchange="saveToLocalStorage()">
+                        10
+                        <span id="health_rating_value">5</span>
+                    </td>
+                </tr>
+            </table>
+
+            <!-- ---------- Remember Me ---------- -->
+            <h3>Save My Information</h3>
+            <table>
+                <tr>
+                    <td>
+                        <label for="remember-me">
+                            <input type="checkbox" id="remember-me" checked
+                                title="Check to save your information for next time. Uncheck to delete all saved data."
+                                onclick="handleRememberMe()">
+                            Remember Me
+                        </label>
+                    </td>
+                    <td>
+                        <span id="remember-note">
+                            Your non-sensitive information will be saved for your next visit.
+                            Passwords and SSN are never saved.
+                        </span>
+                    </td>
+                </tr>
+            </table>
+
+            <!-- ---------- iFrame: Veteran Resources ---------- -->
+            <h3>Veteran Resources</h3>
+            <div id="iframe-container">
+                <!-- iFrame loads external content file with clickable VA links -->
+                <iframe src="resources.html"
+                    id="resources-frame"
+                    title="Veteran health resources"
+                    width="100%" height="180">
+                    Your browser does not support iframes.
+                </iframe>
+            </div>
+
+            <!-- ---------- Review Section ---------- -->
+            <div id="review-section" style="display:none;">
+                <h3>Please Review Your Information</h3>
+                <div id="review-content"></div>
+            </div>
+
+            <!-- ---------- Error Summary ---------- -->
+            <div id="error-summary" style="display:none;"></div>
+
+            <!-- ---------- Form Buttons ---------- -->
+            <div class="button-row">
+                <input type="reset" value="CLEAR AND START OVER"
+                    title="Clear all fields and start over" onclick="clearForm()">
+                <button type="button" onclick="reviewForm()"
+                    title="Review all your entered information">Review</button>
+                <button type="button" onclick="validateForm()"
+                    title="Validate all fields. Submit button appears when all fields are correct.">Validate</button>
+                <input type="submit" value="Submit" id="submitBtn"
+                    style="display:none;"
+                    title="Submit your completed registration form">
+            </div>
+
+        </form>
+    </div>
+    <!-- ==================== END MAIN FORM CONTAINER ==================== -->
+
+
+    <!-- ==================== FIXED FOOTER ==================== -->
+    <!-- Content protection: this footer stays fixed at the bottom when scrolling -->
+    <div id="footer">
+        <p>Valor Veterans Medical Center | Sugar Land, TX</p>
+        <a href="https://www.va.gov" target="_blank" class="contact-button">Contact Us</a>
+    </div>
+    <!-- ==================== END FIXED FOOTER ==================== -->
+
+
+    <!-- ==================== INLINE JAVASCRIPT ==================== -->
+    <script>
+        /* Dynamically display today's full date in the banner */
+        document.getElementById("today").innerHTML = new Date().toLocaleDateString("en-US", {
+            weekday: "long", year: "numeric", month: "long", day: "numeric"
+        });
+    </script>
+    <!-- ==================== END JAVASCRIPT ==================== -->
+
+</body>
+</html>
+<!-- ==================== END OF DOCUMENT: homework4.html ==================== -->
